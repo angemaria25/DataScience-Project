@@ -2,14 +2,15 @@
 
 
 run () {
-    cd ../DataScience-Project
-    jupyter notebook  project.ipynb
+    cd ..
+    jupyter notebook project.ipynb
    
 }
 
 
 report () {
     cd "../Informe"
+    pdflatex informe.tex
     pdflatex informe.tex
     echo "Archivo Informe.pdf creado con éxito"
 }
@@ -18,13 +19,14 @@ report () {
 slides () {
     cd "../Presentación"
     pdflatex presentación.tex
+    pdflatex presentación.tex
     echo "Archivo Presentación.pdf creado con éxito"
 }
 
 
 show_report () {
     pdf_path="../Informe/informe.pdf"
-    if [ ! -f "$pdf_path"]; then
+    if [ ! -f "$pdf_path" ]; then
         pdflatex "../Informe/informe.tex"
     fi
     echo "Por favor, introduce el nombre del visualizador de PDF que deseas utilizar:"
@@ -38,7 +40,7 @@ show_report () {
 
 show_slides () {
     pdf_path="../Presentación/presentación.pdf"
-    if [ ! -f "$pdf_path"]; then
+    if [ ! -f "$pdf_path" ]; then
         pdflatex "../Presentación/presentación.tex"
     fi
     echo "Por favor, introduce el nombre del visualizador de PDF que deseas utilizar:"
@@ -64,6 +66,26 @@ clean () {
      rm -f "../Presentación/presentación.pdf"
     rm -f "../Presentación/presentación.snm"
     rm -f "../Presentación/presentación.toc"
+}
+
+show_report_a() {
+ pdf_path="../Informe/informe.pdf"
+    if [ ! -f "$pdf_path" ]; then
+        pdflatex "../Informe/informe.tex"
+    fi
+ "$viewer" "../Informe/informe.pdf"  
+
+}
+
+
+show_slides_a() {
+ pdf_path="../Presentación/presentación.pdf"
+    if [ ! -f "$pdf_path" ]; then
+        pdflatex "../Presentación/presentación.tex"
+    fi  
+
+"$viewer" "../Presentación/presentación.pdf"
+   
 }
 
 
@@ -101,10 +123,45 @@ Menú () {
 
 }
 
-while true; do
+if [ $# -eq 0 ]; then
+  while true; do
     clear
     Menú
-done
+  done
+
+
+elif  [ $# -eq 1 ] || [ $# -eq 2 ]; then
+  viewer=$2
+  if [ $# -eq 1 ] ; then
+  case $1 in
+    
+    "run") run ;;
+    "clean") clean ;;
+    "report") report ;;
+    "slides") slides ;;
+    "show_report") show_report ;;
+    "show_slides") show_slides ;;
+    
+  esac
+  fi
+  if [ $# -eq 2 ] ; then  
+  case $1 in
+   
+    "run") run ;;
+    "clean") clean ;;
+    "report") report ;;
+    "slides") slides ;;
+    "show_report") show_report_a ;;
+    "show_slides") show_slides_a ;;
+    
+  esac
+  fi
+else
+  echo "Cantidad inválida de argumentos"
+fi 
+exit 1
+
+
 
 
 
